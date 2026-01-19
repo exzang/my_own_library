@@ -1,4 +1,6 @@
-const int SZ=5e5+5;
+#include<bits/stdc++.h>
+using namespace std;
+const int N=5e6+5,SZ=N,inf=2147483647;
 int tot,lc[SZ],rc[SZ],sz[SZ],rd[SZ],v[SZ],rt[2];
 inline void update(int x){
 	sz[x]=sz[lc[x]]+sz[rc[x]]+1;
@@ -68,4 +70,21 @@ inline void Nxt(int &p,int val){
 	ans=Val(y,1);
 	p=merge(x,y);
 	return;
+}
+int trans;
+int main(){
+	int n,m,v,opt,x;
+	scanf("%d",&m);
+	for(int i=1;i<=m;++i){
+		scanf("%d%d",&opt,&x);
+		switch(opt){
+			case 1: Ins(rt[1],x); break;
+			case 2: Del(rt[1],x); break;
+			case 3: Kth(rt[1],x); printf("%d\n",ans); break;
+			case 4: ans=Val(rt[1],x); printf("%d\n",ans); break;
+			case 5: Pre(rt[1],x); printf("%d\n",ans); break;
+			case 6: Nxt(rt[1],x); printf("%d\n",ans); break; 
+		}
+	}
+	return 0;
 }
