@@ -51,5 +51,6 @@ int main() {
   while (s[i + k] == s[sa[rk[i] - 1] + k]) ++k;
   height[rk[i]] = k;
 }
+  // note that LCP(sa[i],sa[j]) = min(height[i+1...j])
   return 0;
 }
