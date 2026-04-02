@@ -96,3 +96,26 @@ struct SuffixArray{
 		return min(st[l][k],st[r-(1<<k)+1][k]);
 	}
 }a,b;
+
+
+struct treap {
+	int ls[N],rs[N],s[N],top,fa[N];
+	void build() {
+		if(n==1) return root=2,void();
+		ls[2]=n+1,rs[2]=n+2,fa[ls[2]]=fa[rs[2]]=root=s[++top]=2;
+		rep(i,3,n) {
+			while(top&&h[s[top]]>h[i]) top--;
+			if(top) ls[i]=rs[s[top]],fa[rs[s[top]]]=i,rs[s[top]]=i,fa[i]=s[top];
+			else ls[i]=root,fa[root]=i,root=i;
+			rs[i]=n+i,fa[rs[i]]=i,s[++top]=i;
+		}
+		rep(i,2,n+n) val[i]=(i>n?n-sa[i-n]+1:h[i])-h[fa[i]];
+	}
+	void prep(int x) {
+		lct.sm(x)=val[x],lct.top(x)=pre[x];
+		if(x>n) return;
+		pre[ls[x]]=pre[rs[x]]=pre[x]+val[x];
+		lct.fa(ls[x])=lct.fa(rs[x])=x;
+		prep(ls[x]),prep(rs[x]);
+	}
+} trp;
