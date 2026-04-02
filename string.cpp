@@ -54,3 +54,45 @@ int main() {
   // note that LCP(sa[i],sa[j]) = min(height[i+1...j])
   return 0;
 }
+
+
+struct SuffixArray{
+	char s[N+7];
+	int m,c[N+7],tp[N+7],rk[N+7],sa[N+7];
+	int h[N+7],st[N+7][20];
+	void csort(){
+		for(int i=0;i<=m;i++) c[i]=0;
+		for(int i=1;i<=n;i++) c[rk[i]]++;
+		for(int i=1;i<=m;i++) c[i]+=c[i-1];
+		for(int i=n;i>=1;i--) sa[c[rk[tp[i]]]--]=tp[i];
+	}
+	void build(){
+		memset(c,0,sizeof c);
+		memset(tp,0,sizeof tp);
+		memset(rk,0,sizeof rk);
+		memset(sa,0,sizeof sa);
+		memset(h,0,sizeof h);
+		memset(st,0,sizeof st);
+		for(int i=1;i<=n;i++) rk[i]=s[i],tp[i]=i;
+		m=128,csort();
+		for(int w=1,p=1,i;p<n;w<<=1,m=p){
+			for(p=0,i=n-w+1;i<=n;i++) tp[++p]=i;
+			for(i=1;i<=n;i++)if(sa[i]>w) tp[++p]=sa[i]-w;
+			csort(),swap(rk,tp),rk[sa[1]]=p=1;
+			for(i=2;i<=n;rk[sa[i]]=p,i++)
+				if(tp[sa[i]]!=tp[sa[i-1]]||tp[sa[i]+w]!=tp[sa[i-1]+w]) p++;
+		}
+		for(int i=1,j,k=0;i<=n;h[rk[i++]]=k)
+			for(k=k?k-1:k,j=sa[rk[i]-1];s[i+k]==s[j+k];k++);
+		for(int i=1;i<=n;i++) st[i][0]=h[i];
+		for(int w=1;w<=18;w++)
+			for(int i=1;i+(1<<w)-1<=n;i++)
+				st[i][w]=min(st[i][w-1],st[i+(1<<(w-1))][w-1]);
+	}
+	int Lcp(int a,int b){
+		int l=rk[a],r=rk[b];
+		if(l>r) swap(l,r); l++;
+		int k=log2(r-l+1);
+		return min(st[l][k],st[r-(1<<k)+1][k]);
+	}
+}a,b;
